@@ -57,8 +57,7 @@ class LoginController extends Controller
             // Bagian role dihapus karena modelnya belum ada
         ]);
 
-        return redirect()->intended('/admin/dashboard')->with('success', 'Login berhasil!');
-    }
+    return redirect('/admin/dashboard')->with('success', 'Selamat Datang, ' . $user->nama);    }
 
     // 3. Proses Logout
     public function logout(Request $request)

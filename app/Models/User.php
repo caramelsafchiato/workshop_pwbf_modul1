@@ -9,14 +9,16 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'users'; // Nama tabelmu
-    protected $primaryKey = 'iduser'; // INI WAJIB ADA
+    protected $table = 'users';
+    protected $primaryKey = 'iduser'; 
 
     protected $fillable = [
         'nama', 
         'email', 
         'password', 
-        'role', // Tambahkan ini agar tidak error saat create
+        'role', 
+        'id_google', 
+        'otp',       
     ];
 
     protected $hidden = [

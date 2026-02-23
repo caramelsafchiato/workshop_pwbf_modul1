@@ -39,11 +39,26 @@
       </a>
     </li>
 
+    <li class="nav-item {{ request()->routeIs('pdf.sertifikat') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('pdf.sertifikat') }}" target="_blank">
+        <span class="menu-title">Cetak Sertifikat</span>
+        <i class="mdi mdi-certificate menu-icon"></i>
+      </a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('pdf.pengumuman') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('pdf.pengumuman') }}" target="_blank">
+        <span class="menu-title">Cetak Pengumuman</span>
+        <i class="mdi mdi-file-document-outline menu-icon"></i>
+      </a>
+    </li>
+
     <li class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('profile.index') }}">
         <span class="menu-title">Pengaturan Profil</span>
         <i class="mdi mdi-account-settings menu-icon"></i>
       </a>
     </li>
+
   </ul>
 </nav>
