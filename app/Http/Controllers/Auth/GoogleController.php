@@ -7,8 +7,8 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail; // WAJIB TAMBAH INI
-use App\Mail\OtpMail;               // WAJIB TAMBAH INI
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OtpMail;               
 use Illuminate\Http\Request;
 
 class GoogleController extends Controller
@@ -30,11 +30,9 @@ class GoogleController extends Controller
                 'role' => 'admin' 
             ]);
 
-            // 3. Generate OTP 6 Karakter (Poin d.ii)
             $otpCode = rand(100000, 999999);
             $user->update(['otp' => $otpCode]);
 
-            // --- BARIS YANG KURANG: KIRIM EMAIL SEKARANG ---
             Mail::to($user->email)->send(new OtpMail($otpCode)); 
             // -----------------------------------------------
 

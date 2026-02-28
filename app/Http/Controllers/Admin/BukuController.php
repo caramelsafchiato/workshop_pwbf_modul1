@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Wajib diimport untuk Query Builder
+use Illuminate\Support\Facades\DB; 
 
 class BukuController extends Controller
 {
     public function index()
     {
-        // Query Builder dengan Join untuk mengambil nama kategori
         $buku = DB::table('buku')
             ->join('kategori', 'buku.idkategori', '=', 'kategori.idkategori')
             ->select('buku.*', 'kategori.nama_kategori')
@@ -20,7 +19,6 @@ class BukuController extends Controller
     }
 
     public function create() {
-        // Mengambil semua data kategori untuk dropdown
         $kategori = DB::table('kategori')->get(); 
         return view('admin.buku.create', compact('kategori'));
     }
@@ -32,7 +30,6 @@ class BukuController extends Controller
             'idkategori' => 'required'
         ]);
 
-        // Query Builder menggunakan insert (kecuali _token)
         DB::table('buku')->insert([
             'kode'       => $request->kode,
             'judul'      => $request->judul,
@@ -44,11 +41,10 @@ class BukuController extends Controller
     }
 
     public function edit($id) {
-        // Mencari satu data buku berdasarkan idkategori (ID primer)
         $buku = DB::table('buku')->where('idbuku', $id)->first();
         
         if (!$buku) {
-            abort(404); // Pengganti findOrFail
+            abort(404);
         }
 
         $kategori = DB::table('kategori')->get();
@@ -62,7 +58,6 @@ class BukuController extends Controller
             'idkategori' => 'required'
         ]);
 
-        // Update data berdasarkan idbuku
         DB::table('buku')->where('idbuku', $id)->update([
             'kode'       => $request->kode,
             'judul'      => $request->judul,
@@ -74,7 +69,6 @@ class BukuController extends Controller
     }
 
     public function destroy($id) {
-        // Hapus data secara langsung
         DB::table('buku')->where('idbuku', $id)->delete();
         
         return redirect()->route('buku.index')->with('success', 'Buku dihapus!');

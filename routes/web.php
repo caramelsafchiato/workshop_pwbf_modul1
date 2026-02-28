@@ -9,7 +9,8 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController; 
-use App\Http\Controllers\PdfController; // 1. IMPORT CONTROLLER PDF
+use App\Http\Controllers\PdfController; 
+use App\Http\Controllers\Admin\BarangController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -58,4 +59,9 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
 
     // Poin b: Format Portrait A4 + Header (Pengumuman)
     Route::get('/cetak-pengumuman', [PdfController::class, 'generatePengumuman'])->name('pdf.pengumuman');
+
+    // Rute Barang (Studi Kasus 3)
+    Route::resource('barang', BarangController::class);
+    Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
+    Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
 });

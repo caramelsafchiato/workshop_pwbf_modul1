@@ -53,6 +53,13 @@
       </a>
     </li>
 
+    <li class="nav-item {{ request()->routeIs('barang.*') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('barang.index') }}">
+        <span class="menu-title">Tag Harga UMKM</span>
+        <i class="mdi mdi-tag-multiple menu-icon"></i>
+      </a>
+    </li>
+
     <li class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('profile.index') }}">
         <span class="menu-title">Pengaturan Profil</span>
