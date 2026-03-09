@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf; // Pastikan baris ini ada untuk memanggil DomPDF
+use Barryvdh\DomPDF\Facade\Pdf; 
 
 class PdfController extends Controller
 {

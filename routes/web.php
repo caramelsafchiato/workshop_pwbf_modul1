@@ -39,6 +39,9 @@ Route::get('/', [SiteController::class, 'index'])->name('site.home');
 Route::get('/cek-koneksi', [SiteController::class, 'cekKoneksi'])->name('site.cek-koneksi');
 
 // --- Route Group Admin (Proteksi Ganda) ---
+// ... (rute lainnya di atas tetap sama)
+
+// --- Route Group Admin (Proteksi Ganda) ---
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     
     // Dashboard Admin
@@ -53,15 +56,26 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // --- FITUR PDF GENERATOR (Studi Kasus 2) ---
-    // Poin a: Format Landscape A4 (Sertifikat)
+    // --- FITUR PDF GENERATOR ---
     Route::get('/cetak-sertifikat', [PdfController::class, 'generateSertifikat'])->name('pdf.sertifikat');
-
-    // Poin b: Format Portrait A4 + Header (Pengumuman)
     Route::get('/cetak-pengumuman', [PdfController::class, 'generatePengumuman'])->name('pdf.pengumuman');
 
-    // Rute Barang (Studi Kasus 3)
+    // Rute Barang (Database)
     Route::resource('barang', BarangController::class);
-    Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
     Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
+
+
+    Route::get('/tabel-barang', function () {
+        return view('admin.tabel_barang.index');
+    })->name('tabel_barang.index');
+
+    // Halaman Kedua: Menggunakan DataTables
+    Route::get('/tabel-barang-dt', function () {
+        return view('admin.tabel_barang.datatables');
+    })->name('tabel_barang.dt');
+
+    Route::get('/kota', function () {
+        return view('admin.kota.index');
+    })->name('kota.index');
+
 });

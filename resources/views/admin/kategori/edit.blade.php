@@ -23,7 +23,7 @@
                 <h4 class="card-title">Form Perubahan Kategori</h4>
                 <p class="card-description"> Ubah nama kategori sesuai kebutuhan sistem </p>
                 
-                <form class="forms-sample" action="{{ route('kategori.update', $kategori->idkategori) }}" method="POST">
+                <form id="formEditKategori" action="{{ route('kategori.update', $kategori->idkategori) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -43,12 +43,50 @@
                             </span>
                         @enderror
                     </div>
-
-                    <button type="submit" class="btn btn-gradient-primary me-2">Update Data</button>
-                    <a href="{{ route('kategori.index') }}" class="btn btn-light">Batal</a>
                 </form>
+
+                <div class="mt-4">
+                    <button type="button" id="btnUpdate" class="btn btn-gradient-primary me-2" onclick="handleUpdate()">
+                        <span id="textUpdate">Update Data</span>
+                        <span id="loaderUpdate" style="display: none;">
+                            <i class="mdi mdi-loading mdi-spin"></i> Memperbarui...
+                        </span>
+                    </button>
+                    <a href="{{ route('kategori.index') }}" class="btn btn-light">Batal</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Animasi putar untuk icon loading */
+    .mdi-spin {
+        display: inline-block;
+        animation: spin 2s infinite linear;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    function handleUpdate() {
+        const form = document.getElementById('formEditKategori');
+        const btn = document.getElementById('btnUpdate');
+        const text = document.getElementById('textUpdate');
+        const loader = document.getElementById('loaderUpdate');
+
+        if (form.checkValidity()) {
+            btn.disabled = true;
+            text.style.display = 'none';
+            loader.style.display = 'inline-block';
+
+            form.submit();
+        } else {
+            form.reportValidity();
+        }
+    }
+</script>
 @endsection

@@ -3,7 +3,7 @@
 <head>
     <style>
     @page { 
-        size: 210mm 165mm; 
+        size: 165mm 210mmm; 
         margin: 0; 
     }
     

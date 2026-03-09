@@ -13,7 +13,7 @@
     <div class="col-md-8 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-                <form class="forms-sample" action="{{ route('buku.update', $buku->idbuku) }}" method="POST">
+                <form id="formEditBuku" class="forms-sample" action="{{ route('buku.update', $buku->idbuku) }}" method="POST">
                     @csrf @method('PUT')
                     
                     <div class="form-group">
@@ -28,7 +28,7 @@
 
                     <div class="form-group">
                         <label>Pengarang</label>
-                        <input type="text" name="pengarang" class="form-control" value="{{ old('pengarang', $buku->pengarang) }}">
+                        <input type="text" name="pengarang" class="form-control" value="{{ old('pengarang', $buku->pengarang) }}"required>
                     </div>
 
                     <div class="form-group">
@@ -41,12 +41,54 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <button type="submit" class="btn btn-gradient-primary me-2">Update Buku</button>
-                    <a href="{{ route('buku.index') }}" class="btn btn-light">Batal</a>
                 </form>
+
+                <div class="mt-3">
+                    <button type="button" id="btnUpdateBuku" class="btn btn-gradient-primary me-2" onclick="handleUpdateBuku()">
+                        <span id="textUpdate">Update Buku</span>
+                        <span id="loaderUpdate" style="display: none;">
+                            <i class="mdi mdi-loading mdi-spin"></i> Menyimpan Perubahan...
+                        </span>
+                    </button>
+                    <a href="{{ route('buku.index') }}" class="btn btn-light">Batal</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* CSS Spinner agar icon MDI berputar */
+    .mdi-spin {
+        display: inline-block;
+        animation: spin 2s infinite linear;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    function handleUpdateBuku() {
+        const form = document.getElementById('formEditBuku');
+        const btn = document.getElementById('btnUpdateBuku');
+        const text = document.getElementById('textUpdate');
+        const loader = document.getElementById('loaderUpdate');
+
+        // (c.i) Validasi form menggunakan HTML5 checkValidity
+        if (form.checkValidity()) {
+            // (c.iii) Jika valid: Disable button, sembunyikan teks, munculkan loader
+            btn.disabled = true;
+            text.style.display = 'none';
+            loader.style.display = 'inline-block';
+
+            // Kirim form
+            form.submit();
+        } else {
+            // (c.ii) Jika tidak valid: Munculkan tooltip error dari browser
+            form.reportValidity();
+        }
+    }
+</script>
 @endsection

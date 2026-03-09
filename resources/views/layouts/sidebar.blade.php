@@ -60,6 +60,20 @@
       </a>
     </li>
 
+    <li class="nav-item {{ request()->routeIs('tabel_barang.index') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('tabel_barang.index') }}">
+        <span class="menu-title">Simulasi Tabel JS</span>
+        <i class="mdi mdi-table-edit menu-icon"></i>
+      </a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('kota.*') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('kota.index') }}">
+        <span class="menu-title">Manajemen Kota</span>
+        <i class="mdi mdi-city menu-icon"></i>
+      </a>
+    </li>
+
     <li class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('profile.index') }}">
         <span class="menu-title">Pengaturan Profil</span>
