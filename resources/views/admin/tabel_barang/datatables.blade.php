@@ -18,7 +18,7 @@
 
 <div class="row">
 
-    <!-- FORM INPUT -->
+
     <div class="col-md-5 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">

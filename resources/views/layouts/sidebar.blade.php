@@ -74,6 +74,36 @@
       </a>
     </li>
 
+    {{-- MENU BARU: WILAYAH AJAX --}}
+    <li class="nav-item {{ request()->routeIs('wilayah.ajax') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('wilayah.ajax') }}">
+        <span class="menu-title">Wilayah (AJAX)</span>
+        <i class="mdi mdi-map-marker menu-icon"></i>
+      </a>
+    </li>
+
+    {{-- MENU BARU: WILAYAH AXIOS --}}
+    <li class="nav-item {{ request()->routeIs('wilayah.axios') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('wilayah.axios') }}">
+        <span class="menu-title">Wilayah (Axios)</span>
+        <i class="mdi mdi-map-marker-outline menu-icon"></i>
+      </a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('kasir.ajax') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('kasir.ajax') }}">
+        <span class="menu-title">Kasir (AJAX)</span>
+        <i class="mdi mdi-ajax menu-icon"></i>
+      </a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('kasir.axios') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('kasir.axios') }}">
+        <span class="menu-title">Kasir (AXIOS)</span>
+        <i class="mdi mdi-swap-horizontal menu-icon"></i>
+      </a>
+    </li>
+
     <li class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('profile.index') }}">
         <span class="menu-title">Pengaturan Profil</span>

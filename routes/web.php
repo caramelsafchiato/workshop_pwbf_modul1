@@ -10,7 +10,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\GoogleController; 
 use App\Http\Controllers\PdfController; 
-use App\Http\Controllers\Admin\BarangController; 
+use App\Http\Controllers\Admin\BarangController;
+use App\Http\Controllers\PesananController;
+use App\Http\Controllers\MenuController; 
+use App\Http\Controllers\MidtransWebhookController;
+use App\Http\Controllers\VendorOrderController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,8 +43,31 @@ Route::post('/verify-otp', [GoogleController::class, 'verifyOtp'])->name('otp.ve
 Route::get('/', [SiteController::class, 'index'])->name('site.home');
 Route::get('/cek-koneksi', [SiteController::class, 'cekKoneksi'])->name('site.cek-koneksi');
 
+// --- Rute POS (Point of Sale) ---
+Route::get('/pos', function () {
+    return view('pesanan.pos');
+})->name('pos.index');
+
+// --- Rute API AJAX untuk Menu & Vendor ---
+Route::prefix('api')->group(function () {
+    Route::get('/vendor', [MenuController::class, 'getAllVendor'])->name('api.vendor');
+    Route::get('/menu/vendor/{idvendor}', [MenuController::class, 'getMenuByVendor'])->name('api.menu.vendor');
+    Route::get('/menu/{idmenu}', [MenuController::class, 'getMenuDetail'])->name('api.menu.detail');
+});
+
+// --- Rute Pesanan untuk Guest (Tanpa Login) ---
+Route::post('/pesanan/store-guest', [PesananController::class, 'storePesananGuest'])->name('pesanan.store-guest');
+Route::get('/pesanan/{idpesanan}', [PesananController::class, 'getPesananDetail'])->name('pesanan.detail');
+Route::put('/pesanan/{idpesanan}/status-bayar', [PesananController::class, 'updateStatusBayar'])->name('pesanan.update-status');
+Route::post('/midtrans/notification', [MidtransWebhookController::class, 'handle'])
+    ->withoutMiddleware([VerifyCsrfToken::class])
+    ->name('midtrans.notification');
+
+Route::prefix('vendor')->middleware(['auth', 'isVendor'])->group(function () {
+    Route::get('/pesanan-lunas', [VendorOrderController::class, 'paidOrders'])->name('vendor.pesanan-lunas');
+});
+
 // --- Route Group Admin (Proteksi Ganda) ---
-// ... (rute lainnya di atas tetap sama)
 
 // --- Route Group Admin (Proteksi Ganda) ---
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
@@ -77,5 +105,20 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::get('/kota', function () {
         return view('admin.kota.index');
     })->name('kota.index');
+
+    Route::prefix('admin/kasir')->group(function () {
+        // Rute Tampilan
+        Route::get('/ajax', [App\Http\Controllers\Admin\KasirController::class, 'indexAjax'])->name('kasir.ajax');
+        Route::get('/axios', [App\Http\Controllers\Admin\KasirController::class, 'indexAxios'])->name('kasir.axios');
+
+        // Rute API (Shared/Digunakan bersama)
+        Route::post('/cek-barang', [App\Http\Controllers\Admin\KasirController::class, 'cekBarang'])->name('kasir.cekBarang');
+        Route::post('/bayar', [App\Http\Controllers\Admin\KasirController::class, 'bayar'])->name('kasir.bayar');
+    });
+
+    Route::prefix('wilayah')->group(function () {
+        Route::get('/ajax', [App\Http\Controllers\Admin\WilayahController::class, 'indexAjax'])->name('wilayah.ajax');
+        Route::get('/axios', [App\Http\Controllers\Admin\WilayahController::class, 'indexAxios'])->name('wilayah.axios');
+    });
 
 });

@@ -24,5 +24,7 @@
 
     @include('layouts.javascriptglobal')
     @include('layouts.javascrippage')
+    @yield('scripts')
+    
 </body>
 </html>

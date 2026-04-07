@@ -175,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function(){
         }
     }
 
-    /* jalankan untuk dua card */
     setup("kotaInputDefault", "kotaSelectDefault", "addKotaDefault", "kotaTerpilihDefault");
     setup("kotaInputSelect2", "kotaSelect2", "addKotaSelect2", "kotaTerpilihSelect2");
 });
