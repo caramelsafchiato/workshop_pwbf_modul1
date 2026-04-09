@@ -12,14 +12,13 @@ class isAdmin
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        // Cek: Apakah user sudah login dan apakah kolom role isinya 'admin'?
-        if (auth()->check() && auth()->user()->role == 'admin') {
+        if (Auth::check() && Auth::user()->role == 'admin') {
             return $next($request);
         }
 
-        // Kalau bukan admin, lempar ke dashboard dengan pesan error
-        return redirect()->route('dashboard')->with('error', 'Hanya Admin yang boleh masuk!');
+        // JANGAN ke /login, tapi ke / atau /pos biar gak loop
+        return redirect('/')->with('error', 'Halaman ini khusus Admin!');
     }
 }

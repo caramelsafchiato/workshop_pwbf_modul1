@@ -25,89 +25,100 @@
       </a>
     </li>
 
-    <li class="nav-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('kategori.index') }}">
-        <span class="menu-title">Manajemen Kategori</span>
-        <i class="mdi mdi-bookmark-outline menu-icon"></i>
-      </a>
-    </li>
+    <hr class="mx-3" style="border-color: rgba(255,255,255,0.1)">
 
-    <li class="nav-item {{ request()->routeIs('buku.*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('buku.index') }}">
-        <span class="menu-title">Koleksi Buku</span>
-        <i class="mdi mdi-book-open-page-variant menu-icon"></i>
-      </a>
-    </li>
+    @if(Auth::check() && Auth::user()->role == 'admin')
+      <li class="nav-item">
+        <span class="nav-link" style="font-size: 11px; color: #9c9fa6; text-transform: uppercase;">Menu Admin</span>
+      </li>
+      
+      <li class="nav-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('kategori.index') }}">
+          <span class="menu-title">Manajemen Kategori</span>
+          <i class="mdi mdi-bookmark-outline menu-icon"></i>
+        </a>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('pdf.sertifikat') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('pdf.sertifikat') }}" target="_blank">
-        <span class="menu-title">Cetak Sertifikat</span>
-        <i class="mdi mdi-certificate menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('buku.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('buku.index') }}">
+          <span class="menu-title">Koleksi Buku</span>
+          <i class="mdi mdi-book-open-page-variant menu-icon"></i>
+        </a>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('pdf.pengumuman') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('pdf.pengumuman') }}" target="_blank">
-        <span class="menu-title">Cetak Pengumuman</span>
-        <i class="mdi mdi-file-document-outline menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('pdf.*') ? 'active' : '' }}">
+        <a class="nav-link" data-bs-toggle="collapse" href="#ui-pdf" aria-expanded="false" aria-controls="ui-pdf">
+          <span class="menu-title">Cetak Dokumen</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-certificate menu-icon"></i>
+        </a>
+        <div class="collapse" id="ui-pdf">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item"> <a class="nav-link" href="{{ route('pdf.sertifikat') }}" target="_blank">Sertifikat</a></li>
+            <li class="nav-item"> <a class="nav-link" href="{{ route('pdf.pengumuman') }}" target="_blank">Pengumuman</a></li>
+          </ul>
+        </div>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('barang.*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('barang.index') }}">
-        <span class="menu-title">Tag Harga UMKM</span>
-        <i class="mdi mdi-tag-multiple menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('barang.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('barang.index') }}">
+          <span class="menu-title">Tag Harga UMKM</span>
+          <i class="mdi mdi-tag-multiple menu-icon"></i>
+        </a>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('tabel_barang.index') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('tabel_barang.index') }}">
-        <span class="menu-title">Simulasi Tabel JS</span>
-        <i class="mdi mdi-table-edit menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('kasir.ajax') }}">
+          <span class="menu-title">Kasir (AJAX)</span>
+          <i class="mdi mdi-ajax menu-icon"></i>
+        </a>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('kota.*') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('kota.index') }}">
-        <span class="menu-title">Manajemen Kota</span>
-        <i class="mdi mdi-city menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('user.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('user.index') }}">
+          <span class="menu-title">Manajemen User</span>
+          <i class="mdi mdi-account-group menu-icon"></i>
+        </a>
+      </li>
+    @endif
 
-    {{-- MENU BARU: WILAYAH AJAX --}}
-    <li class="nav-item {{ request()->routeIs('wilayah.ajax') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('wilayah.ajax') }}">
-        <span class="menu-title">Wilayah (AJAX)</span>
-        <i class="mdi mdi-map-marker menu-icon"></i>
-      </a>
-    </li>
+    @if(Auth::check() && Auth::user()->idvendor != null)
+      <li class="nav-item">
+        <span class="nav-link" style="font-size: 11px; color: #9c9fa6; text-transform: uppercase;">Menu Kantin (Vendor)</span>
+      </li>
 
-    {{-- MENU BARU: WILAYAH AXIOS --}}
-    <li class="nav-item {{ request()->routeIs('wilayah.axios') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('wilayah.axios') }}">
-        <span class="menu-title">Wilayah (Axios)</span>
-        <i class="mdi mdi-map-marker-outline menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('vendor.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('vendor.index') }}">
+          <span class="menu-title">Kelola Menu</span>
+          <i class="mdi mdi-food menu-icon"></i>
+        </a>
+      </li>
 
-    <li class="nav-item {{ request()->routeIs('kasir.ajax') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('kasir.ajax') }}">
-        <span class="menu-title">Kasir (AJAX)</span>
-        <i class="mdi mdi-ajax menu-icon"></i>
-      </a>
-    </li>
+      <li class="nav-item {{ request()->routeIs('vendor.pesanan-lunas') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('vendor.pesanan-lunas') }}">
+          <span class="menu-title">Pesanan Lunas</span>
+          <i class="mdi mdi-cash-check menu-icon"></i>
+        </a>
+      </li>
+    @endif
 
-    <li class="nav-item {{ request()->routeIs('kasir.axios') ? 'active' : '' }}">
-      <a class="nav-link" href="{{ route('kasir.axios') }}">
-        <span class="menu-title">Kasir (AXIOS)</span>
-        <i class="mdi mdi-swap-horizontal menu-icon"></i>
-      </a>
+    <hr class="mx-3" style="border-color: rgba(255,255,255,0.1)">
+
+    <li class="nav-item">
+      <span class="nav-link" style="font-size: 11px; color: #9c9fa6; text-transform: uppercase;">Layanan</span>
     </li>
 
     <li class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
       <a class="nav-link" href="{{ route('profile.index') }}">
         <span class="menu-title">Pengaturan Profil</span>
         <i class="mdi mdi-account-settings menu-icon"></i>
+      </a>
+    </li>
+
+    <li class="nav-item {{ request()->routeIs('pos.index') ? 'active' : '' }}">
+      <a class="nav-link" href="{{ route('pos.index') }}">
+        <span class="menu-title">Ke Kantin (POS)</span>
+        <i class="mdi mdi-cart menu-icon"></i>
       </a>
     </li>
 

@@ -48,7 +48,16 @@ class LoginController extends Controller
             'user_email' => $user->email,
         ]);
 
-    return redirect('/admin/dashboard')->with('success', 'Selamat Datang, ' . $user->nama);    }
+        if ($user->role == 'admin') {
+            return redirect('/admin/dashboard');
+        } elseif ($user->role == 'vendor' || $user->idvendor != null) {
+            // Langsung lempar ke rute kelola menu vendor
+            return redirect()->route('vendor.index'); 
+        } else {
+            return redirect('/'); // Atau rute lain untuk user biasa
+        }
+
+    }
 
     public function logout(Request $request)
     {

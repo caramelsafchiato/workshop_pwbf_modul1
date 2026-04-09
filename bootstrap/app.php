@@ -10,12 +10,16 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
+// bootstrap/app.php
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->redirectUsersTo('/');
+
         $middleware->alias([
-            'isAdmin' => App\Http\Middleware\IsAdmin::class,
-            'isVendor' => App\Http\Middleware\IsVendor::class,
-        ]); // <--- TAMBAHKAN TITIK KOMA DI SINI
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+            'isVendor' => \App\Http\Middleware\IsVendor::class, // <-- Cek penulisan huruf besar kecilnya ya!
+        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

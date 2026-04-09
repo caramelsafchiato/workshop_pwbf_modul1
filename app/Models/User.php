@@ -9,20 +9,18 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'users';
-    protected $primaryKey = 'iduser'; 
+    // 1. Kasih tahu Laravel kalau Primary Key-nya iduser
+    protected $primaryKey = 'iduser';
 
+    // 2. Daftarkan kolom agar bisa diisi (Mass Assignment)
     protected $fillable = [
         'nama', 
         'email', 
         'password', 
         'role', 
-        'id_google', 
-        'otp',       
+        'idvendor'
     ];
-
-    protected $hidden = [
-        'password', 
-        'remember_token',
-    ];
+    
+    // Jangan lupa ini kalau kamu nggak pakai id (standard)
+    public $incrementing = true;
 }
