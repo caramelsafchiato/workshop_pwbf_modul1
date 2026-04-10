@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\Models\Menu;
 use App\Models\Vendor;
@@ -31,7 +31,7 @@ class MenuController extends Controller
             'idvendor' => 'required|exists:vendor,idvendor',
             'path_gambar' => 'nullable|string|max:255',
         ]);
-
+        
         Menu::create([
             'nama_menu' => $request->nama_menu,
             'harga' => $request->harga,

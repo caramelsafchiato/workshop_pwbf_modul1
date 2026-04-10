@@ -12,7 +12,7 @@ class Pesanan extends Model
 
 	protected $fillable = [
 		'nama',
-		'timestamp',
+		'timestamp', 
 		'total',
 		'metode_bayar',
 		'status_bayar',

@@ -19,25 +19,17 @@ use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\VendorOrderController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
-/*
-|--------------------------------------------------------------------------
-| 1. Rute Publik & Autentikasi (DENGAN AUTO-REDIRECT)
-|--------------------------------------------------------------------------
-*/
+//publik
 
-// PERBAIKAN: Rute Home jadi "Pintar"
 Route::get('/', function () {
     if (Auth::check()) {
-        // Jika Admin
         if (Auth::user()->role == 'admin') {
             return redirect()->route('dashboard');
         } 
-        // Jika Vendor (Punya idvendor atau role vendor)
         if (Auth::user()->role == 'vendor' || Auth::user()->idvendor != null) {
             return redirect()->route('vendor.index');
         }
     }
-    // Jika belum login, baru tampilkan halaman landing page ungu (index.blade.php)
     return view('index'); 
 })->name('site.home');
 
@@ -56,14 +48,9 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/verify-otp', [GoogleController::class, 'showOtpForm'])->name('otp.view');
 Route::post('/verify-otp', [GoogleController::class, 'verifyOtp'])->name('otp.verify');
 
-/*
-|--------------------------------------------------------------------------
-| 2. MODUL 6: Fitur Kantin (Customer - Tanpa Login)
-|--------------------------------------------------------------------------
-*/
+//kantin pos
 
 Route::get('/pos', function () {
-    // Kita harus ambil data vendor dulu di sini!
     $vendors = \App\Models\Vendor::all(); 
     return view('pesanan.pos', compact('vendors'));
 })->name('pos.index');
@@ -84,14 +71,7 @@ Route::post('/midtrans/notification', [MidtransWebhookController::class, 'handle
     ->name('midtrans.notification');
 
 
-/*
-|--------------------------------------------------------------------------
-| MODUL 6: Fitur Vendor
-|--------------------------------------------------------------------------
-*/
-// routes/web.php
-
-// routes/web.php
+//Vendor
 
 Route::middleware(['auth', 'isVendor'])->group(function () {
     Route::get('/vendor/kelola-menu', [MenuController::class, 'index'])->name('vendor.index');
@@ -101,11 +81,7 @@ Route::middleware(['auth', 'isVendor'])->group(function () {
     Route::get('/vendor/pesanan-lunas', [VendorOrderController::class, 'paidOrders'])->name('vendor.pesanan-lunas');
 });
 
-/*
-|--------------------------------------------------------------------------
-| 4. Fitur Admin (Proteksi Role Admin)
-|--------------------------------------------------------------------------
-*/
+//ADMIN
 
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     

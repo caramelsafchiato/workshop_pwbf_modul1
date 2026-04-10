@@ -23,8 +23,6 @@ class PesananController extends Controller
 
         try {
             DB::transaction(function () use ($request) {
-                // Tabel pesanan pada project ini menggunakan tipe integer untuk metode_bayar
-                // dan smallint untuk status_bayar, jadi dipetakan agar tetap kompatibel.
                 $idPesanan = DB::table('pesanan')->insertGetId([
                     'nama' => 'Guest Customer',
                     'total' => (int) round($request->total_harga),
@@ -76,8 +74,6 @@ class PesananController extends Controller
             return DB::transaction(function () use ($request) {
                 $total = (int) round($request->total_harga);
 
-                // DB project ini menyimpan metode/status sebagai kode angka:
-                // metode_bayar: 1=Midtrans, status_bayar: 0=Pending, 1=Lunas.
                 $idPesanan = DB::table('pesanan')->insertGetId([
                     'nama' => 'Guest Customer',
                     'total' => $total,
