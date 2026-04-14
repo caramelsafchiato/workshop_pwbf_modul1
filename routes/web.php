@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use Illuminate\Support\Facades\Auth; 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Site\SiteController;
 use App\Http\Controllers\Admin\KategoriController;
@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\BarangController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\MenuController; 
 use App\Http\Controllers\MidtransWebhookController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\VendorOrderController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
@@ -48,6 +49,12 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 Route::get('/verify-otp', [GoogleController::class, 'showOtpForm'])->name('otp.view');
 Route::post('/verify-otp', [GoogleController::class, 'verifyOtp'])->name('otp.verify');
 
+
+//customer
+Route::get('/customer/create', [CustomerController::class, 'create'])->name('customer.create');
+Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
+
+
 //kantin pos
 
 Route::get('/pos', function () {
@@ -65,6 +72,7 @@ Route::post('/pesanan/store-guest', [PesananController::class, 'storePesananGues
 Route::get('/pesanan/detail/{idpesanan}', [PesananController::class, 'getPesananDetail'])->name('pesanan.detail');
 Route::post('/pesanan/checkout', [PesananController::class, 'checkout'])->name('pesanan.checkout');
 Route::post('/pesanan/simulasi', [PesananController::class, 'storePesananSimulasi'])->name('pesanan.simulasi');
+Route::get('/pesanan/invoice/{id}', [PesananController::class, 'showInvoice'])->name('pesanan.invoice');
 
 Route::post('/midtrans/notification', [MidtransWebhookController::class, 'handle'])
     ->withoutMiddleware([VerifyCsrfToken::class])

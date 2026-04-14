@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller; 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Picqer\Barcode\BarcodeGeneratorHTML;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class BarangController extends Controller
@@ -17,16 +18,17 @@ class BarangController extends Controller
     public function cetak(Request $request)
     {
         $barang = \App\Models\Barang::whereIn('id_barang', $request->ids)->get(); 
-
+        $generator = new BarcodeGeneratorHTML();
         $skip = (($request->y - 1) * 5) + ($request->x - 1);
 
         $customPaper = [0, 0, 595.28, 467.72]; 
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.tag_harga', compact('barang', 'skip'))
-                ->setPaper($customPaper, 'portrait');
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.tag_harga', compact('barang', 'skip', 'generator'))
+                    ->setPaper($customPaper, 'landscape'); 
 
         return $pdf->stream('Tag_Harga_TnJ_108.pdf');
     }
+
     public function create()
     {
         return view('admin.barang.create');

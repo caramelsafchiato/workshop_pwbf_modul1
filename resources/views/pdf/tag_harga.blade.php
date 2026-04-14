@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
+<style>
     @page { 
-        size: 165mm 210mmm; 
+        size: 210mm 165mm; 
         margin: 0; 
     }
     
@@ -16,10 +16,8 @@
     .label-table {
         border-collapse: separate; 
         border-spacing: 2mm; 
-        
         margin-top: 0.5mm;  
         margin-left: 3mm;   
-        
         table-layout: fixed;
     }
 
@@ -32,10 +30,22 @@
         box-sizing: border-box;
     }
 
+    .barcode-item {
+        display: inline-block; 
+        margin: 0 auto;
+        width: fit-content;
+    }
+
+    .barcode-item > div {
+        display: inline-block !important;
+        float: none !important;
+    }
+
     .empty { border: none !important; }
-    .id { font-size: 6pt; color: #888; display: block; }
-    .name { font-size: 8pt; font-weight: bold; display: block; margin: 1px 0; }
-    .price { font-size: 9pt; color: #d63384; font-weight: bold; display: block; }
+    
+    .id { font-size: 6pt; color: #888; display: block; line-height: 1; }
+    .name { font-size: 7pt; font-weight: bold; display: block; margin: 0; line-height: 1; }
+    .price { font-size: 8pt; color: #d63384; font-weight: bold; display: block; line-height: 1; }
 </style>
 </head>
 <body>
@@ -48,9 +58,15 @@
                     <td class="label-td {{ $currentBox <= $skip ? 'empty' : '' }}">
                         @if($currentBox > $skip && isset($barang[$itemIndex]))
                             @php $item = $barang[$itemIndex]; @endphp
+                            
+                            <div class="barcode-item">
+                                {!! $generator->getBarcode($item->id_barang, $generator::TYPE_CODE_128, 1, 15) !!}
+                            </div>
+
                             <span class="id">{{ $item->id_barang }}</span>
                             <span class="name">{{ $item->nama }}</span>
                             <span class="price">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                            
                             @php $itemIndex++; @endphp
                         @endif
                     </td>

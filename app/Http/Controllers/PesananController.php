@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Pesanan;
 use App\Models\DetailPesanan;
 use Midtrans\Config;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Midtrans\Snap;
 
 class PesananController extends Controller
@@ -50,7 +51,7 @@ class PesananController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Pembayaran Berhasil (Simulasi)!',
+                'message' => 'Pembayaran Berhasil!',
             ]);
         } catch (\Throwable $e) {
             return response()->json([
@@ -113,6 +114,11 @@ class PesananController extends Controller
                     ],
                 ];
 
+                $enabledPayments = array_values(array_filter(array_map('trim', explode(',', (string) env('MIDTRANS_ENABLED_PAYMENTS', '')))));
+                if (!empty($enabledPayments)) {
+                    $params['enabled_payments'] = $enabledPayments;
+                }
+
                 $token = Snap::getSnapToken($params);
 
                 DB::table('pesanan')
@@ -153,6 +159,15 @@ class PesananController extends Controller
             'status' => 'success',
             'data' => $pesanan,
         ]);
+    }
+
+    public function showInvoice($idpesanan)
+    {
+        $pesanan = Pesanan::with(['details.menu'])->findOrFail($idpesanan);
+
+        $qrcode = QrCode::size(150)->generate($pesanan->idpesanan);
+
+        return view('pesanan.invoice', compact('pesanan', 'qrcode'));
     }
 
 }
