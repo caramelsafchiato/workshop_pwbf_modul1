@@ -31,14 +31,21 @@
     }
 
     .barcode-item {
-        display: inline-block; 
-        margin: 0 auto;
-        width: fit-content;
+        display: block;
+        margin: 0 auto 2px auto;
+        width: auto;
+        max-width: 34mm;
+        overflow: visible;
+        text-align: center;
     }
 
-    .barcode-item > div {
-        display: inline-block !important;
-        float: none !important;
+    .barcode-item svg {
+        display: inline-block;
+        margin: 0 auto;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
     }
 
     .empty { border: none !important; }
@@ -60,7 +67,7 @@
                             @php $item = $barang[$itemIndex]; @endphp
                             
                             <div class="barcode-item">
-                                {!! $generator->getBarcode($item->id_barang, $generator::TYPE_CODE_128, 1, 15) !!}
+                                {!! $generator->getBarcode($item->id_barang, $generator::TYPE_CODE_128, 2, 25) !!}
                             </div>
 
                             <span class="id">{{ $item->id_barang }}</span>

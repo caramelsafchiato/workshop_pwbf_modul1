@@ -74,6 +74,13 @@
         </a>
       </li>
 
+      <li class="nav-item">
+          <a class="nav-link" href="{{ route('admin.scan') }}">
+              <span class="menu-title">Scanner Barcode</span>
+              <i class="mdi mdi-barcode-scan menu-icon text-primary"></i>
+          </a>
+      </li>
+
       <li class="nav-item {{ request()->routeIs('user.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.index') }}">
           <span class="menu-title">Manajemen User</span>
@@ -82,7 +89,7 @@
       </li>
     @endif
 
-    @if(Auth::check() && Auth::user()->idvendor != null)
+    @if(Auth::check() && (strtolower(Auth::user()->role) == 'vendor' || Auth::user()->idvendor != null))
       <li class="nav-item">
         <span class="nav-link" style="font-size: 11px; color: #9c9fa6; text-transform: uppercase;">Menu Kantin (Vendor)</span>
       </li>
@@ -98,6 +105,13 @@
         <a class="nav-link" href="{{ route('vendor.pesanan-lunas') }}">
           <span class="menu-title">Pesanan Lunas</span>
           <i class="mdi mdi-cash-check menu-icon"></i>
+        </a>
+      </li>
+
+      <li class="nav-item {{ request()->routeIs('vendor.scan') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('vendor.scan') }}">
+          <span class="menu-title">Scan Pesanan QR</span>
+          <i class="mdi mdi-qrcode-scan menu-icon text-info"></i>
         </a>
       </li>
     @endif

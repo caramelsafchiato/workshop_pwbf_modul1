@@ -62,6 +62,20 @@ class MenuController extends Controller
         return redirect()->back()->with('success', 'Menu berhasil diupdate!');
     }
 
+    public function show($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $vendors = Vendor::orderBy('nama_vendor')->get();
+        return view('vendor.edit', compact('menu', 'vendors'));
+    }
+
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $vendors = Vendor::orderBy('nama_vendor')->get();
+        return view('vendor.edit', compact('menu', 'vendors'));
+    }
+
     public function destroy($id)
     {
         $menu = Menu::findOrFail($id);

@@ -165,7 +165,11 @@ class PesananController extends Controller
     {
         $pesanan = Pesanan::with(['details.menu'])->findOrFail($idpesanan);
 
-        $qrcode = QrCode::size(150)->generate($pesanan->idpesanan);
+        $qrcode = QrCode::format('svg')
+            ->size(220)
+            ->margin(1)
+            ->errorCorrection('H')
+            ->generate($pesanan->idpesanan);
 
         return view('pesanan.invoice', compact('pesanan', 'qrcode'));
     }

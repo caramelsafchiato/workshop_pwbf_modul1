@@ -112,6 +112,23 @@ $(function () {
             });
     });
 
+    // Fallback: jika server tidak mengirim daftar vendor, ambil via API
+    if ($('#selectVendor option').length <= 1) {
+        $.get("{{ url('/api/vendor') }}")
+            .done(function (data) {
+                if (!Array.isArray(data) || data.length === 0) return;
+                $('#selectVendor').empty().append('<option value="">-- Pilih Vendor --</option>');
+                data.forEach(function (v) {
+                    $('#selectVendor').append(
+                        `<option value="${v.idvendor}">${v.nama_vendor}</option>`
+                    );
+                });
+            })
+            .fail(function () {
+                console.warn('Gagal memuat daftar vendor.');
+            });
+    }
+
     $('#selectMenu').on('change', function () {
         $('#btnTambah').prop('disabled', !$(this).val());
     });
@@ -214,12 +231,16 @@ $(function () {
                     setLoadingButton(false);
                     isSubmitting = false;
                     openInvoiceInNewTab(response.idpesanan);
+                    // Kembalikan halaman POS ke keadaan awal (kosong)
+                    window.location.href = "{{ route('pos.index') }}";
                 },
                 onPending: function () {
                     alert('Pembayaran tertunda. Silakan selesaikan pembayaran Anda.');
                     setLoadingButton(false);
                     isSubmitting = false;
                     openInvoiceInNewTab(response.idpesanan);
+                    // Jika pembayaran pending, juga kembali ke halaman POS kosong
+                    window.location.href = "{{ route('pos.index') }}";
                 },
                 onError: function () {
                     alert('Pembayaran gagal. Silakan coba kembali.');

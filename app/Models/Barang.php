@@ -17,11 +17,15 @@ class Barang extends Model
     protected static function booted()
     {
         static::creating(function ($barang) {
-            $today = Carbon::now()->format('ymd'); 
-            
-            $count = static::whereDate('timestamp', Carbon::today())->count();
-            
-            $barang->id_barang = $today . str_pad($count + 1, 2, '0', STR_PAD_LEFT);
+            $today = Carbon::now()->format('ymd');
+
+            $lastId = static::where('id_barang', 'like', $today . '%')
+                ->orderBy('id_barang', 'desc')
+                ->value('id_barang');
+
+            $sequence = $lastId ? ((int) substr($lastId, -2)) + 1 : 1;
+
+            $barang->id_barang = $today . str_pad($sequence, 2, '0', STR_PAD_LEFT);
             $barang->timestamp = Carbon::now();
         });
     }

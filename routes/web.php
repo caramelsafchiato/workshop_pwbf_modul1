@@ -18,10 +18,10 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\VendorOrderController;
+use App\Http\Controllers\Admin\ScannerController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
-//publik
-
+// --- PUBLIK ---
 Route::get('/', function () {
     if (Auth::check()) {
         if (Auth::user()->role == 'admin') {
@@ -36,27 +36,24 @@ Route::get('/', function () {
 
 Route::get('/cek-koneksi', [SiteController::class, 'cekKoneksi'])->name('site.cek-koneksi');
 
-// Auth Manual
+// --- AUTH MANUAL ---
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-// Google Auth & OTP
+// --- GOOGLE AUTH & OTP ---
 Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/verify-otp', [GoogleController::class, 'showOtpForm'])->name('otp.view');
 Route::post('/verify-otp', [GoogleController::class, 'verifyOtp'])->name('otp.verify');
 
-
-//customer
+// --- CUSTOMER (MODUL 7: AKSES KAMERA) ---
 Route::get('/customer/create', [CustomerController::class, 'create'])->name('customer.create');
 Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
 
-
-//kantin pos
-
+// --- KANTIN POS & API ---
 Route::get('/pos', function () {
     $vendors = \App\Models\Vendor::all(); 
     return view('pesanan.pos', compact('vendors'));
@@ -66,6 +63,10 @@ Route::prefix('api')->group(function () {
     Route::get('/vendor', [MenuController::class, 'getAllVendor'])->name('api.vendor');
     Route::get('/menu/vendor/{idvendor}', [MenuController::class, 'getMenuByVendor'])->name('api.menu.vendor');
     Route::get('/menu/{idmenu}', [MenuController::class, 'getMenuDetail'])->name('api.menu.detail');
+    
+    // [MODUL 8] API Lookup untuk Scanner
+    Route::get('/scanner/barang/{id}', [ScannerController::class, 'getBarangDetail'])->name('api.scanner.barang');
+    Route::get('/scanner/pesanan/{id}', [ScannerController::class, 'getPesananDetail'])->name('api.scanner.pesanan');
 });
 
 Route::post('/pesanan/store-guest', [PesananController::class, 'storePesananGuest'])->name('pesanan.store-guest');
@@ -79,18 +80,22 @@ Route::post('/midtrans/notification', [MidtransWebhookController::class, 'handle
     ->name('midtrans.notification');
 
 
-//Vendor
-
+// --- VENDOR ---
 Route::middleware(['auth', 'isVendor'])->group(function () {
     Route::get('/vendor/kelola-menu', [MenuController::class, 'index'])->name('vendor.index');
     Route::post('/vendor/menu/store', [MenuController::class, 'store'])->name('menu.store');
+    Route::get('/vendor/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
+    Route::get('/vendor/menu/{id}/edit', [MenuController::class, 'edit'])->name('menu.edit');
     Route::put('/vendor/menu/{id}', [MenuController::class, 'update'])->name('menu.update');
     Route::delete('/vendor/menu/{id}', [MenuController::class, 'destroy'])->name('menu.destroy');
     Route::get('/vendor/pesanan-lunas', [VendorOrderController::class, 'paidOrders'])->name('vendor.pesanan-lunas');
+
+    // [MODUL 8] Praktikum 2: Vendor Scan QR Customer
+    Route::get('/vendor/scan-pesanan', [ScannerController::class, 'scanPesanan'])->name('vendor.scan');
 });
 
-//ADMIN
 
+// --- ADMIN ---
 Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -109,6 +114,9 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     Route::post('/barang/cetak', [BarangController::class, 'cetak'])->name('barang.cetak');
     Route::get('/tabel-barang', function () { return view('admin.tabel_barang.index'); })->name('tabel_barang.index');
     Route::get('/tabel-barang-dt', function () { return view('admin.tabel_barang.datatables'); })->name('tabel_barang.dt');
+
+    // [MODUL 8] Praktikum 1: Admin Scan Barcode Barang
+    Route::get('/scan-barang', [ScannerController::class, 'scanBarang'])->name('admin.scan');
 
     Route::get('/kota', function () { return view('admin.kota.index'); })->name('kota.index');
 
