@@ -25,7 +25,7 @@
                         <select name="role" class="form-control" id="roleSelect" required>
                             <option value="admin">Admin</option>
                             <option value="vendor">Vendor</option>
-                            <option value="user">User Biasa</option>
+                            <option value="sales">Sales</option>
                         </select>
                     </div>
                     <div class="form-group" id="vendorField" style="display:none;">

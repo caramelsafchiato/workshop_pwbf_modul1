@@ -81,6 +81,13 @@
           </a>
       </li>
 
+      <li class="nav-item {{ request()->routeIs('lokasitoko.*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('lokasitoko.index') }}">
+          <span class="menu-title">Kunjungan Toko</span>
+          <i class="mdi mdi-map-marker-radius menu-icon text-warning"></i>
+        </a>
+      </li>
+
       <li class="nav-item {{ request()->routeIs('user.*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('user.index') }}">
           <span class="menu-title">Manajemen User</span>
@@ -112,6 +119,24 @@
         <a class="nav-link" href="{{ route('vendor.scan') }}">
           <span class="menu-title">Scan Pesanan QR</span>
           <i class="mdi mdi-qrcode-scan menu-icon text-info"></i>
+        </a>
+      </li>
+    @endif
+
+    @if(Auth::check() && Auth::user()->role == 'sales')
+      <li class="nav-item">
+        <span class="nav-link" style="font-size: 11px; color: #9c9fa6;">MENU SALES</span>
+      </li>
+      <li class="nav-item {{ request()->routeIs('sales.dashboard') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('sales.dashboard') }}">
+          <span class="menu-title">Dashboard Sales</span>
+          <i class="mdi mdi-home menu-icon"></i>
+        </a>
+      </li>
+      <li class="nav-item {{ request()->routeIs('lokasitoko.scan') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('lokasitoko.scan') }}">
+          <span class="menu-title">Scan Kunjungan</span>
+          <i class="mdi mdi-qrcode-scan menu-icon text-success"></i>
         </a>
       </li>
     @endif

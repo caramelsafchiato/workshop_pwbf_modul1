@@ -19,20 +19,32 @@ use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\VendorOrderController;
 use App\Http\Controllers\Admin\ScannerController;
+use App\Http\Controllers\Admin\LokasiTokoController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 // --- PUBLIK ---
 Route::get('/', function () {
+    // 1. Cek apakah user sudah login
     if (Auth::check()) {
-        if (Auth::user()->role == 'admin') {
+        $role = strtolower(Auth::user()->role);
+
+        // 2. Lempar ke dashboard sesuai role masing-masing
+        if ($role == 'admin') {
             return redirect()->route('dashboard');
         } 
-        if (Auth::user()->role == 'vendor' || Auth::user()->idvendor != null) {
+        
+        if ($role == 'sales') {
+            return redirect()->route('sales.dashboard');
+        }
+
+        if ($role == 'vendor') {
             return redirect()->route('vendor.index');
         }
     }
-    return view('index'); 
-})->name('site.home');
+
+    // 3. Kalau belum login, baru tampilin halaman ungu (index) itu
+    return view('index');
+});
 
 Route::get('/cek-koneksi', [SiteController::class, 'cekKoneksi'])->name('site.cek-koneksi');
 
@@ -67,6 +79,10 @@ Route::prefix('api')->group(function () {
     // [MODUL 8] API Lookup untuk Scanner
     Route::get('/scanner/barang/{id}', [ScannerController::class, 'getBarangDetail'])->name('api.scanner.barang');
     Route::get('/scanner/pesanan/{id}', [ScannerController::class, 'getPesananDetail'])->name('api.scanner.pesanan');
+    // Lokasi Toko API
+    Route::get('/lokasi-toko/{barcode}', [App\Http\Controllers\Admin\LokasiTokoController::class, 'getLokasi'])->name('api.lokasi_toko.lookup');
+    Route::post('/lokasi-toko/validate', [App\Http\Controllers\Admin\LokasiTokoController::class, 'validateVisit'])->name('api.lokasi_toko.validate');
+
 });
 
 Route::post('/pesanan/store-guest', [PesananController::class, 'storePesananGuest'])->name('pesanan.store-guest');
@@ -118,6 +134,15 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     // [MODUL 8] Praktikum 1: Admin Scan Barcode Barang
     Route::get('/scan-barang', [ScannerController::class, 'scanBarang'])->name('admin.scan');
 
+    // Lokasi Toko (Kunjungan sales)
+    Route::get('/lokasi-toko', [App\Http\Controllers\Admin\LokasiTokoController::class, 'index'])->name('lokasitoko.index');
+    Route::get('/lokasi-toko/create', [App\Http\Controllers\Admin\LokasiTokoController::class, 'create'])->name('lokasitoko.create');
+    Route::post('/lokasi-toko/store', [App\Http\Controllers\Admin\LokasiTokoController::class, 'store'])->name('lokasitoko.store');
+    Route::get('/lokasi-toko/scan', [App\Http\Controllers\Admin\LokasiTokoController::class, 'scan'])->name('lokasitoko.scan');
+
+    Route::get('/lokasi-toko/history', [App\Http\Controllers\Admin\LokasiTokoController::class, 'history'])->name('lokasitoko.history');
+    Route::get('/lokasi-toko/cetak/{barcode}', [App\Http\Controllers\Admin\LokasiTokoController::class, 'cetakQR'])->name('lokasitoko.cetak');
+
     Route::get('/kota', function () { return view('admin.kota.index'); })->name('kota.index');
 
     Route::prefix('kasir')->group(function () {
@@ -133,4 +158,11 @@ Route::prefix('admin')->middleware(['auth', 'isAdmin'])->group(function () {
     });
 
     Route::resource('user', UserController::class);
+});
+
+//Sales
+Route::middleware(['auth', 'isSales'])->group(function () {
+    Route::get('/sales/dashboard', [LokasiTokoController::class, 'salesDashboard'])->name('sales.dashboard');
+    
+    Route::get('/sales/scan', [LokasiTokoController::class, 'scanSales'])->name('sales.scan');
 });
